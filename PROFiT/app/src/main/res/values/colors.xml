@@ -1,9 +1,0 @@
-<resources>
-    <color name="bg">#0F141C</color>
-    <color name="icon_bg">#243045</color>
-    <color name="txt">#F3F6FB</color>
-    <color name="mut">#93A1B8</color>
-    <color name="acc">#7CC4FF</color>
-    <color name="ok">#6EE7A8</color>
-    <color name="warn">#FFCF5C</color>
-</resources>
