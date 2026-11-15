@@ -50,6 +50,11 @@ jobs:
           test -n "$KEYSTORE_PASSWORD" || { echo "Falta o secret KEYSTORE_PASSWORD"; exit 1; }
           test -n "$KEY_ALIAS" || { echo "Falta o secret KEY_ALIAS"; exit 1; }
           test -n "$KEY_PASSWORD" || { echo "Falta o secret KEY_PASSWORD"; exit 1; }
+          # Diagnóstico da chave (não mostra a senha, só o tamanho)
+          export P="$(printf %s "$KEYSTORE_PASSWORD" | tr -d '[:space:]')"
+          echo "::notice::KEYSTORE_PASSWORD tem ${#P} caracteres (esperado 24); KEY_PASSWORD tem $(printf %s "$KEY_PASSWORD" | tr -d '[:space:]' | wc -c)"
+          if openssl pkcs12 -in app/profit.jks -passin env:P -noout 2>/dev/null; then echo "::notice::openssl: senha confere com a chave"; else echo "::error::openssl: senha NAO confere com a chave (KEYSTORE_PASSWORD ou KEYSTORE_BASE64 errado)"; fi
+          if keytool -list -keystore app/profit.jks -storepass "$P" >/dev/null 2>&1; then echo "::notice::keytool: chave lida pelo Java"; else echo "::error::keytool: Java nao conseguiu ler a chave"; fi
           chmod +x gradlew
           ./gradlew --no-daemon assembleRelease
           cp app/build/outputs/apk/release/app-release.apk PROFiT.apk
