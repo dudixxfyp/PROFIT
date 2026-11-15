@@ -47,6 +47,9 @@ jobs:
           VERSION_CODE: ${{ github.run_number }}
           VERSION_NAME: ${{ github.ref_type == 'tag' && github.ref_name || format('dev-{0}', github.run_number) }}
         run: |
+          test -n "$KEYSTORE_PASSWORD" || { echo "Falta o secret KEYSTORE_PASSWORD"; exit 1; }
+          test -n "$KEY_ALIAS" || { echo "Falta o secret KEY_ALIAS"; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo "Falta o secret KEY_PASSWORD"; exit 1; }
           chmod +x gradlew
           ./gradlew --no-daemon assembleRelease
           cp app/build/outputs/apk/release/app-release.apk PROFiT.apk
